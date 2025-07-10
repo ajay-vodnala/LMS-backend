@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "start": "node index.mjs",
-    "dev": "nodemon index.mjs"
+    "dev": "nodemon index.mjs",
+    "postinstall": "npm rebuild sqlite3"
   },
   "keywords": [],
   "author": "",
