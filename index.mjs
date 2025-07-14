@@ -2,7 +2,6 @@
 
 import express from 'express';
 import cors from 'cors';
-import multer from 'multer';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import { fileURLToPath } from 'url';
@@ -57,21 +56,21 @@ app.get("/userList", async (req, res) => {
 });
 
 app.post("/addbook", async (req, res) => {
-  const { bookId, title, author, yearOfPublish, location, department, publisher, language, status, appliedBy, description,imageUrl } = req.body;
-  await pool.query(`INSERT INTO booksInfo (bookId, title, author, yearOfPublish, department, location, language, publisher, description, status, appliedBy, imageUrl) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
-    [bookId, title, author, yearOfPublish, department, location, language, publisher, description, status, appliedBy, imageUrl]);
+  const { bookid, title, author, yearofpublish, location, department, publisher, language, status, appliedby, description,imageurl } = req.body;
+  await pool.query(`INSERT INTO booksInfo (bookid, title, author, yearofpublish, department, location, language, publisher, description, status, appliedby, imageurl) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
+    [bookid, title, author, yearofpublish, department, location, language, publisher, description, status, appliedby, imageurl]);
   res.send("Inserted successfully");
 });
 
 app.delete("/deleteBook/:id", async (req, res) => {
   const { id } = req.params;
-  await pool.query("DELETE FROM booksInfo WHERE bookId=$1", [id]);
+  await pool.query("DELETE FROM booksInfo WHERE bookid=$1", [id]);
   res.send("Deleted successfully");
 });
 
-app.get("/bookDetails/:bookId", async (req, res) => {
-  const { bookId } = req.params;
-  const result = await pool.query("SELECT * FROM booksInfo WHERE bookId=$1", [bookId]);
+app.get("/bookDetails/:bookid", async (req, res) => {
+  const { bookid } = req.params;
+  const result = await pool.query("SELECT * FROM booksInfo WHERE bookid=$1", [bookid]);
   res.json(result.rows[0]);
 });
 
@@ -81,19 +80,19 @@ app.get("/studentDetails/:email", async (req, res) => {
   res.json(result.rows[0]);
 });
 
-app.put("/updateBook/:bookId", async (req, res) => {
-  const { bookId } = req.params;
-  const { title, description, author, yearOfPublish, location, department, publisher, language, imageUrl } = req.body;
-  await pool.query(`UPDATE booksInfo SET title=$1, description=$2, author=$3, yearOfPublish=$4, department=$5, location=$6, language=$7, publisher=$8, imageUrl=$9 WHERE bookId=$10`,
-    [title, description, author, yearOfPublish, department, location, language, publisher, imageUrl, bookId]);
+app.put("/updateBook/:bookid", async (req, res) => {
+  const { bookid } = req.params;
+  const { title, description, author, yearofpublish, location, department, publisher, language, imageurl } = req.body;
+  await pool.query(`UPDATE booksInfo SET title=$1, description=$2, author=$3, yearofpublish=$4, department=$5, location=$6, language=$7, publisher=$8, imageurl=$9 WHERE bookid=$10`,
+    [title, description, author, yearofpublish, department, location, language, publisher, imageurl, bookid]);
   res.send("Updated successfully");
 });
 
-app.put("/updateBookStatus/:bookId", authenticationToken, async (req, res) => {
-  const { bookId } = req.params;
-  const { status, appliedBy } = req.body;
-  const appliedByText = appliedBy === "email" ? req.email : appliedBy;
-  await pool.query("UPDATE booksInfo SET status=$1, appliedBy=$2 WHERE bookId=$3", [status, appliedByText, bookId]);
+app.put("/updateBookStatus/:bookid", authenticationToken, async (req, res) => {
+  const { bookid } = req.params;
+  const { status, appliedby } = req.body;
+  const appliedbyText = appliedby === "email" ? req.email : appliedby;
+  await pool.query("UPDATE booksInfo SET status=$1, appliedby=$2 WHERE bookid=$3", [status, appliedbyText, bookid]);
   res.send("Updated successfully");
 });
 
@@ -126,7 +125,7 @@ app.put("/updateUserStatus", async (req, res) => {
 });
 
 app.get("/studentUtilities/appliedBooks", authenticationToken, async (req, res) => {
-  const result = await pool.query("SELECT * FROM booksInfo WHERE appliedBy=$1", [req.email]);
+  const result = await pool.query("SELECT * FROM booksInfo WHERE appliedby=$1", [req.email]);
   res.json(result.rows);
 });
 
