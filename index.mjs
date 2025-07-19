@@ -151,4 +151,23 @@ app.get("/getEmail", authenticationToken, async (req, res) => {
   res.send({ email: req.email });
 });
 
+app.put("/updateRating/:bookid", authenticationToken, async (req, res) => {
+  const {bookid}=req.params;
+  const {rating,feedback}=req.body;
+  const result = await pool.query("SELECT ratings FROM booksinfo WHERE bookid=$1", [bookid]);
+  const currentRatings = result.rows[0].ratings || [];
+  const newRating = {
+    rating: rating,
+    feedback: feedback,
+    ratedby: req.email
+  };
+  if (currentRatings.some(r => r.ratedby === req.email)) {
+  return res.status(400).send({text:"You have already rated this book"});
+  }
+  const updatedRatings = [...currentRatings, newRating];
+  await pool.query(`UPDATE booksinfo SET ratings=$1 WHERE bookid=$2`,[JSON.stringify(updatedRatings),bookid]);
+  res.send({text:"submitted successfully"});
+});
+
+
 app.listen(port, () => console.log(`Server running on port ${port}`));
