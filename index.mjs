@@ -156,6 +156,9 @@ app.put("/updateRating/:bookid", authenticationToken, async (req, res) => {
   const {rating,feedback}=req.body;
   const result = await pool.query("SELECT ratings FROM booksinfo WHERE bookid=$1", [bookid]);
   const currentRatings = result.rows[0].ratings || [];
+  if (typeof currentRatings === 'string') {
+    currentRatings = JSON.parse(currentRatings);
+  }
   const newRating = {
     rating: rating,
     feedback: feedback,
