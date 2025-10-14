@@ -1,11 +1,10 @@
-// server.js (PostgreSQL Full Backend Migration)
-
 import express from 'express';
 import cors from 'cors';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import pkg from 'pg';
 import dotenv from 'dotenv';
+process.env.PGHOSTADDR = "0.0.0.0";
 
 dotenv.config();
 
