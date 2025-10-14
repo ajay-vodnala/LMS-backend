@@ -49,6 +49,7 @@ app.get("/userList", async (req, res) => {
 });
 
 app.post("/addbook", async (req, res) => {
+  console.log(req.body);
   const { bookid, title, author, yearofpublish, location, department, publisher, language, status, appliedby, description,imageurl } = req.body;
   await pool.query(`INSERT INTO booksinfo (bookid, title, author, yearofpublish, department, location, language, publisher, description, status, appliedby, imageurl) VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)`,
     [bookid, title, author, yearofpublish, department, location, language, publisher, description, status, appliedby, imageurl]);
