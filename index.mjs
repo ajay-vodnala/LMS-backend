@@ -4,8 +4,8 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 import pkg from 'pg';
 import dotenv from 'dotenv';
-process.env.PGHOSTADDR = "0.0.0.0";
-
+import path from "path";
+import { fileURLToPath } from "url";
 dotenv.config();
 
 const { Pool } = pkg;
@@ -21,6 +21,10 @@ const app = express();
 const port = process.env.PORT || 5000;
 app.use(express.json());
 app.use(cors());
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 
 // JWT Middleware
 const authenticationToken = (req, res, next) => {
